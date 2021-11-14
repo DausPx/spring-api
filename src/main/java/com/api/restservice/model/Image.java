@@ -29,6 +29,10 @@ public class Image {
 
     }
 
+    public Image(String url){
+        this.url = url;
+    }
+
     public Image(String url, Sight sight){
         this.url = url;
         this.sight = sight;
