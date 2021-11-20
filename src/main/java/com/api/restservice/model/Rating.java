@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "scores")
-public class Score {
+public class Rating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,11 +23,11 @@ public class Score {
     @ManyToOne(fetch = FetchType.LAZY)
     private Sight sight;
 
-    public Score(){
+    public Rating(){
 
     }
 
-    public Score(int rating, Sight sight){
+    public Rating(int rating, Sight sight){
         this.rating = rating;
         this.sight = sight;
     }

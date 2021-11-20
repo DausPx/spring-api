@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +43,7 @@ public class SightController {
 
         if(exist){
             Sight sight = sightRepository.getById(id);
+
             return new ResponseEntity<>(sight, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -59,33 +59,33 @@ public class SightController {
                 tempSight.addImage(new Image(image.getUrl()));
             }
 
-			Sight _sight = sightRepository.save(tempSight);
+			Sight createdSight = sightRepository.save(tempSight);
             
-			return new ResponseEntity<>(_sight, HttpStatus.CREATED);
+			return new ResponseEntity<>(createdSight, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
 
     @PutMapping("sight/{id}")
-    public ResponseEntity<Sight> updateSight(@PathVariable long id, @RequestBody Sight sight) {
+    public ResponseEntity<Sight> updateSight(@PathVariable long id, @RequestBody Sight sightParam) {
         boolean exist = sightRepository.existsById(id);
 
         if(exist){
-            Sight _sight = sightRepository.getById(id);
-            _sight.setName(sight.getName());
-            _sight.setDesciption(sight.getDesciption());
-            _sight.setActive(sight.getActive());
-            _sight.setLangitude(sight.getLangitude());
-            _sight.setLongitude(sight.getLongitude());
+            Sight tempSight = sightRepository.getById(id);
+            tempSight.setName(sightParam.getName());
+            tempSight.setDesciption(sightParam.getDesciption());
+            tempSight.setActive(sightParam.getActive());
+            tempSight.setLangitude(sightParam.getLangitude());
+            tempSight.setLongitude(sightParam.getLongitude());
 
-            _sight.getImages().clear();
+            tempSight.getImages().clear();
 
-            for(Image image: sight.getImages()){
-                _sight.addImage(new Image(image.getUrl()));
+            for(Image image: sightParam.getImages()){
+                tempSight.addImage(new Image(image.getUrl()));
             }
 
-            return new ResponseEntity<>(sightRepository.save(_sight), HttpStatus.OK);
+            return new ResponseEntity<>(sightRepository.save(tempSight), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -95,6 +95,7 @@ public class SightController {
     public ResponseEntity<HttpStatus> deleteSight(@PathVariable(name = "id") long id){
         try {
             sightRepository.deleteById(id);
+            
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
