@@ -1,5 +1,6 @@
 package com.api.restservice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.api.restservice.model.Image;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("api")
 public class SightController {
@@ -33,45 +33,68 @@ public class SightController {
     ImageRepository imageRepository;
 
     @GetMapping("sight")
-    public ResponseEntity<List<Sight>> getSights(@RequestParam(required = false) String title, @RequestParam(required = false) String relevance) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<List<Sight>> getSights(@RequestParam(required = false) String name,
+            @RequestParam(required = false) String relevance) {
+        try {
+            List<Sight> sights = new ArrayList<Sight>();
+
+            if (name == null) {
+                if(relevance == null){
+                    sightRepository.findByNameLike(name).forEach(sights::add);
+                }else{
+                    sightRepository.findByNameLikeAndRelevanceIs(name, relevance).forEach(sights::add);
+                }
+            }else{
+                if(relevance == null){
+                    sightRepository.findAll().forEach(sights::add);
+                }else{
+                    sightRepository.findByRelevance(relevance).forEach(sights::add);
+                }
+            }
+
+            return new ResponseEntity<>(sights, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @GetMapping("sight/{id}")
-    public ResponseEntity<Sight> getSight(@PathVariable(name = "id") long id){
+    public ResponseEntity<Sight> getSight(@PathVariable(name = "id") long id) {
         boolean exist = sightRepository.existsById(id);
 
-        if(exist){
+        if (exist) {
             Sight sight = sightRepository.getById(id);
 
             return new ResponseEntity<>(sight, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("sight")
     public ResponseEntity<Sight> createSight(@RequestBody Sight sight) {
-		try {
-            Sight tempSight = new Sight(sight.getName(), sight.getDesciption(), sight.getActive(), sight.getRelevance(), sight.getLangitude(), sight.getLongitude());
+        try {
+            Sight tempSight = new Sight(sight.getName(), sight.getDesciption(), sight.getActive(), sight.getRelevance(),
+                    sight.getLangitude(), sight.getLongitude());
 
-            for(Image image : sight.getImages()){
+            for (Image image : sight.getImages()) {
                 tempSight.addImage(new Image(image.getUrl()));
             }
 
-			Sight createdSight = sightRepository.save(tempSight);
-            
-			return new ResponseEntity<>(createdSight, HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+            Sight createdSight = sightRepository.save(tempSight);
+
+            return new ResponseEntity<>(createdSight, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("sight/{id}")
     public ResponseEntity<Sight> updateSight(@PathVariable long id, @RequestBody Sight sightParam) {
         boolean exist = sightRepository.existsById(id);
 
-        if(exist){
+        if (exist) {
             Sight tempSight = sightRepository.getById(id);
             tempSight.setName(sightParam.getName());
             tempSight.setDesciption(sightParam.getDesciption());
@@ -81,21 +104,21 @@ public class SightController {
 
             tempSight.getImages().clear();
 
-            for(Image image: sightParam.getImages()){
+            for (Image image : sightParam.getImages()) {
                 tempSight.addImage(new Image(image.getUrl()));
             }
 
             return new ResponseEntity<>(sightRepository.save(tempSight), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("sight/{id}")
-    public ResponseEntity<HttpStatus> deleteSight(@PathVariable(name = "id") long id){
+    public ResponseEntity<HttpStatus> deleteSight(@PathVariable(name = "id") long id) {
         try {
             sightRepository.deleteById(id);
-            
+
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
