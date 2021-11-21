@@ -1,7 +1,7 @@
 package com.api.restservice;
 
 import com.api.restservice.repository.ImageRepository;
-import com.api.restservice.repository.ScoreRepository;
+import com.api.restservice.repository.RatingRepository;
 import com.api.restservice.repository.SightRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class RestServiceApplication implements CommandLineRunner{
 	ImageRepository imageRepository;
 
 	@Autowired
-	ScoreRepository scoreRepository;
+	RatingRepository scoreRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(RestServiceApplication.class, args);
