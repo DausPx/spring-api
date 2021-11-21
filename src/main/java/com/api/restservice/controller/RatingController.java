@@ -1,7 +1,5 @@
 package com.api.restservice.controller;
 
-import java.util.List;
-
 import com.api.restservice.model.Rating;
 import com.api.restservice.model.Sight;
 import com.api.restservice.repository.RatingRepository;
@@ -27,8 +25,14 @@ public class RatingController {
     SightRepository sightRepository;
 
     @GetMapping("rating")
-    public ResponseEntity<List<Rating>> getRatingByID(@RequestParam long sightId){
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<Double> getRatingByID(@RequestParam long sightId){
+        boolean sightExist = sightRepository.existsById(sightId);
+
+        if(sightExist){
+            return new ResponseEntity<>(ratingRepository.getAverageRating(sightId), HttpStatus.CREATED);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     
     @PostMapping("rating")
@@ -37,9 +41,9 @@ public class RatingController {
 
         if(sightExist){
             Sight sight = sightRepository.getById(sightId);
-            Rating createdRating = new Rating(rating, sight);
+            Rating newRating = new Rating(rating, sight);
 
-            return new ResponseEntity<>(createdRating, HttpStatus.CREATED);
+            return new ResponseEntity<>(ratingRepository.save(newRating), HttpStatus.CREATED);
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
