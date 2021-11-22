@@ -2,6 +2,7 @@ package com.api.restservice.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.api.restservice.model.Image;
 import com.api.restservice.model.Sight;
@@ -38,11 +39,11 @@ public class SightController {
         try {
             List<Sight> sights = new ArrayList<Sight>();
 
-            if (name == null) {
+            if (name != null) {
                 if(relevance == null){
-                    sightRepository.findByNameLike(name).forEach(sights::add);
+                    sightRepository.findByNameContaining(name).forEach(sights::add);
                 }else{
-                    sightRepository.findByNameLikeAndRelevanceIs(name, relevance).forEach(sights::add);
+                    sightRepository.findByNameContainingAndRelevanceIs(name, relevance).forEach(sights::add);
                 }
             }else{
                 if(relevance == null){
@@ -61,10 +62,10 @@ public class SightController {
 
     @GetMapping("sight/{id}")
     public ResponseEntity<Sight> getSight(@PathVariable(name = "id") long id) {
-        boolean exist = sightRepository.existsById(id);
+        Optional<Sight> optionalSight= sightRepository.findById(id);
 
-        if (exist) {
-            Sight sight = sightRepository.getById(id);
+        if (optionalSight.isPresent()) {
+            Sight sight = optionalSight.get();
 
             return new ResponseEntity<>(sight, HttpStatus.OK);
         } else {
@@ -99,6 +100,7 @@ public class SightController {
             tempSight.setName(sightParam.getName());
             tempSight.setDesciption(sightParam.getDesciption());
             tempSight.setActive(sightParam.getActive());
+            tempSight.setRelevance(sightParam.getRelevance());
             tempSight.setLangitude(sightParam.getLangitude());
             tempSight.setLongitude(sightParam.getLongitude());
 
