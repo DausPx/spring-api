@@ -25,7 +25,7 @@ public class Sight {
     private String name;
 
     @Column
-    private String desciption;
+    private String description;
 
     @Column
     private boolean active;
@@ -48,7 +48,7 @@ public class Sight {
 
     public Sight(String name, String description, boolean active, String relevance, String langitude, String longitude){
         this.name = name;
-        this.desciption = description;
+        this.description = description;
         this.active = active;
         this.relevance = relevance;
         this.langitude = langitude;
@@ -57,7 +57,7 @@ public class Sight {
 
     public Sight(String name, String description, boolean active, String relevance, String langitude, String longitude, List<Image> images){
         this.name = name;
-        this.desciption = description;
+        this.description = description;
         this.active = active;
         this.relevance = relevance;
         this.langitude = langitude;
@@ -86,12 +86,12 @@ public class Sight {
         this.name = name;
     }
 
-    public String getDesciption() {
-        return desciption;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesciption(String desciption) {
-        this.desciption = desciption;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setActive(boolean active) {

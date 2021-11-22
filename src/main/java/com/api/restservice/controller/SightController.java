@@ -78,7 +78,7 @@ public class SightController {
     @PostMapping("sight")
     public ResponseEntity<Sight> createSight(@RequestBody Sight sight) {
         try {
-            Sight tempSight = new Sight(sight.getName(), sight.getDesciption(), sight.getActive(), sight.getRelevance(),
+            Sight tempSight = new Sight(sight.getName(), sight.getDescription(), sight.getActive(), sight.getRelevance(),
                     sight.getLangitude(), sight.getLongitude());
 
             for (Image image : sight.getImages()) {
@@ -100,7 +100,7 @@ public class SightController {
         if (exist) {
             Sight tempSight = sightRepository.getById(id);
             tempSight.setName(sightParam.getName());
-            tempSight.setDesciption(sightParam.getDesciption());
+            tempSight.setDescription(sightParam.getDescription());
             tempSight.setActive(sightParam.getActive());
             tempSight.setRelevance(sightParam.getRelevance());
             tempSight.setLangitude(sightParam.getLangitude());
