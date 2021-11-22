@@ -29,7 +29,7 @@ public class RatingController {
         boolean sightExist = sightRepository.existsById(sightId);
 
         if(sightExist){
-            return new ResponseEntity<>(ratingRepository.getAverageRating(sightId), HttpStatus.CREATED);
+            return new ResponseEntity<>(ratingRepository.getAverageRating(sightId), HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

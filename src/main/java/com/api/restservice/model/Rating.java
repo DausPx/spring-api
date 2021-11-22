@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "scores")
 public class Rating {
@@ -21,6 +23,7 @@ public class Rating {
     private int rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Sight sight;
 
     public Rating(){
