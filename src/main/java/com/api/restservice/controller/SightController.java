@@ -43,15 +43,15 @@ public class SightController {
 
             if (name != null) {
                 if(relevance == null){
-                    sightRepository.findByNameContaining(name).forEach(sights::add);
+                    sightRepository.findByNameContainingAndActiveIs(name, true).forEach(sights::add);
                 }else{
-                    sightRepository.findByNameContainingAndRelevanceIs(name, relevance).forEach(sights::add);
+                    sightRepository.findByNameContainingAndRelevanceIsAndActiveIs(name, relevance, true).forEach(sights::add);
                 }
             }else{
                 if(relevance == null){
-                    sightRepository.findAll().forEach(sights::add);
+                    sightRepository.findByActiveIs(true).forEach(sights::add);
                 }else{
-                    sightRepository.findByRelevance(relevance).forEach(sights::add);
+                    sightRepository.findByRelevanceAndActiveIs(relevance, true).forEach(sights::add);
                 }
             }
 
